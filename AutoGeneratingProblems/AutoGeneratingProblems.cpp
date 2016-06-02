@@ -1,4 +1,4 @@
-// shogi_test.cpp : 将棋エンジンと通信
+// AutoGeneratingProblems.cpp : 将棋エンジンと通信
 
 #include <iostream>
 #include <fstream>
@@ -13,6 +13,9 @@
 
 using namespace std;
 
+static const string KIFU_DIR = "D:\\Mydocuments\\shogi\\kifu\\kifu_sfen"; //sfen棋譜フォルダ
+static const string LIMIT_TIME = "20000"; //検討秒数
+static const int ANSWER_LINES = 6; //取得したい行数
 static const int BEGIN = 30; //検討開始手数
 static const int END = 35; //検討終了手数
 
@@ -199,7 +202,7 @@ struct EngineState
 	}
 
 	enum State {
-		START_UP, WAIT_USI_OK, IS_READY, WAIT_READY_OK, GAME_START, GAME_OVER,
+		START_UP, WAIT_USI_OK, IS_READY, WAIT_READY_OK, GAME_START,
 	};
 
 	void on_idle()
@@ -249,7 +252,8 @@ struct EngineState
 	string think(string pos)
 	{
 		pe.write(pos);
-		pe.write("go byoyomi 20000");
+		string go = "go byoyomi " + LIMIT_TIME;
+		pe.write(go);
 		//cout << "now go" << endl;
 		vector <string> out;
 		string out_line;
@@ -263,11 +267,10 @@ struct EngineState
 			}
 			if (out_line.find("bestmove") != string::npos) 
 			{
-				int l_size = int(out.size());
 				//cout << l_size << endl;
-				for (int idx = 6; idx > 0; idx--)
+				for (int i = ANSWER_LINES; i > 0; i--)
 				{
-					answer += out[l_size - idx] + "\n";
+					answer += out[int(out.size()) - i] + "\n";
 				}
 				cout << answer << endl;
 				break;
@@ -338,7 +341,7 @@ void load_config()
 vector<string> load_kifu()
 {
 	
-	tr2::sys::path k_dir("D:\\Mydocuments\\shogi\\kifu\\kifu_sfen");
+	tr2::sys::path k_dir(KIFU_DIR);
 	// k_dir以下のファイル名を取得する
 	// 再帰的にファイル名を取得する場合は、std::tr2::sys::recursive_directory_iteratorを使う
 	for (tr2::sys::directory_iterator it(k_dir), end; it != end; ++it) 
@@ -397,26 +400,23 @@ int main()
 		return 0;
 
 	es.set_engine_config(engine_config_line);
-	int i;
-	int k;
-	for (k = 0; k < (int)(kifu_list.size()); k++)
+	for (int  i= 0; i < (int)(kifu_list.size()); i++)
 	{
-		for (i = BEGIN+1; i < END+1;)
+		for (int j = BEGIN+1; j < END+1;)
 		{
 			es.on_idle();
 			if (!game_started && es.is_game_started())
 			{
-				cout << (k+1) << "/" << (int)(kifu_list.size()) << " Kifu_file, " << (i-1) << " moves"<< endl;
+				cout << (i+1) << "/" << (int)(kifu_list.size()) << " Kifu_file, " << (j-1) << " moves"<< endl;
 				vector <string> tmp;
-				boost::algorithm::split(tmp, kifu_list[k], boost::algorithm:: is_space());
+				boost::algorithm::split(tmp, kifu_list[i], boost::algorithm:: is_space());
 				string position = "position";
-				int j;
-				for (j = 0; j < i; j++)
+				for (int k = 0; k < j; k++)
 				{
-					position += " " + tmp[j];
+					position += " " + tmp[k];
 				}
 				bestmoves = es.think(position);
-				i++;
+				j++;
 			}
 		}
 	}
