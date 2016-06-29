@@ -11,13 +11,14 @@
 #include <filesystem>
 #include <boost/algorithm/string.hpp>
 
+
 using namespace std;
 
-static const string KIFU_DIR = "D:\\Mydocuments\\shogi\\kifu\\kifu_sfen"; //sfen棋譜フォルダ
+static const string KIFU_DIR = "kifu_sfen"; //sfen棋譜フォルダ
 static const string LIMIT_TIME = "20000"; //検討秒数
-static const int ANSWER_LINES = 6; //取得したい行数
+static const int ANSWER_LINES = 5; //取得したい行数
 static const int BEGIN = 30; //検討開始手数
-static const int END = 35; //検討終了手数
+static const int END = 40; //検討終了手数
 
 struct ProcessExecute
 {
@@ -338,6 +339,21 @@ void load_config()
 	f.close();
 }
 
+int check_capture(string str1, string str2) 
+{
+	for (size_t c = str1.find_first_of("+"); c != string::npos; c = c = str1.find_first_of("+")) 
+	{
+		str1.erase(c, 1);
+	}
+	for (size_t c = str2.find_first_of("+"); c != string::npos; c = c = str2.find_first_of("+")) 
+	{
+		str2.erase(c, 1);
+	}
+	string str1_tmp = str1.substr(str1.size() - 2, 2);
+	string str2_tmp = str2.substr(str2.size() - 2, 2);
+	return (str1_tmp == str2_tmp);
+}
+
 vector<string> load_kifu()
 {
 	
@@ -376,20 +392,18 @@ vector<string> load_kifu()
 	}*/
 
 }
-
 int main()
 {
 	//設定のロード
 	load_config();
-	/*
-	for (auto itr = engine_config_line.begin(); itr != engine_config_line.end(); ++itr) {
-		cout << *itr << endl;
-	}
-	*/
+	
 	//棋譜のロード
 	kifu_list = load_kifu();
 	if (kifu_list.empty())
 		return 0;
+
+	//保存用ファイル
+	ofstream ofs("problems.txt");
 
 	bool game_started = false;
 
@@ -410,12 +424,18 @@ int main()
 				cout << (i+1) << "/" << (int)(kifu_list.size()) << " Kifu_file, " << (j-1) << " moves"<< endl;
 				vector <string> tmp;
 				boost::algorithm::split(tmp, kifu_list[i], boost::algorithm:: is_space());
-				string position = "position";
-				for (int k = 0; k < j; k++)
+				//cout << tmp[j - 1] << " " << tmp[j] << endl;
+				if (!check_capture(tmp[j - 1], tmp[j]))
 				{
-					position += " " + tmp[k];
+					string position = "position";
+					for (int k = 0; k < j-1; k++)
+					{
+						position += " " + tmp[k];
+					}
+					ofs << position << endl;
+					bestmoves = es.think(position);
+					ofs << bestmoves << endl;
 				}
-				bestmoves = es.think(position);
 				j++;
 			}
 		}
