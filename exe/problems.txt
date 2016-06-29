@@ -1,8 +1,0 @@
-position startpos moves 2g2f 3c3d 7g7f 2b8h+ 7i8h 3a4b B*4e 7a6b 4e3d 4a3b 6g6f 6c6d 8h7g 6b6c 4i5h 4b3c 3d1f 6c5d 5h6g 4c4d 5g5f 4d4e 3i4h 1c1d 5i6h 6a5b 4h5g 1d1e
-info depth 29 seldepth 29 time 20002 nodes 38359846 nps 1917800 hashfull 113 score mate -2 multipv 4 pv 6i7h 1e1f 1g1f 1a1f 1i1f 2c2d 1f1a+ 2d2e 2f2e B*2b 1a2a 4e4f 4g4f 6d6e 6f6e 5d6e 2a2b 3c2b 7g8f 6e5f 5g5f B*1a 2e2d 7c7d 2d2c+ 2b2c 2h2c+ 3b2c
-info depth 29 seldepth 29 time 20002 nodes 38359846 nps 1917800 hashfull 113 score mate -2 multipv 3 pv 1f2e 1e1f 1g1f 1a1f 1i1f 2c2d 1f1a+ 2d2e 2f2e B*2b 1a2a 4e4f 4g4f 6d6e 6f6e 5d6e 2a2b 3c2b 7g8f 6e5f 5g5f B*1a 2e2d 5c5d 2d2c+ 2b2c 2h2c+ 3b2c
-info depth 29 seldepth 29 time 20002 nodes 38359846 nps 1917800 hashfull 113 score cp 0 multipv 2 pv 2h2g 1e1f 1g1f 1a1f 1i1f 2c2d 1f1a+ 2d2e 2f2e B*2b 1a2a 4e4f 4g4f 6d6e 6f6e 5d6e 2a2b 3c2b 7g8f 6e5f 5g5f B*1a 2e2d 5c5d 2d2c+ 2b2c 2g2c+ 3b2c 6i5h
-info depth 29 seldepth 29 time 20002 nodes 38359846 nps 1917800 hashfull 113 score cp 0 multipv 1 pv 6i7i 1e1f 1g1f 1a1f 1i1f 2c2d 1f1a+ 2d2e 2f2e B*2b 1a2a 4e4f 4g4f 6d6e 6f6e 5d6e 2a2b 3c2b 7g8f 6e5f 5g5f B*1a 2e2d 5c5d 2d2c+ 2b2c 2h2c+ 3b2c 3g3f
-bestmove 6i7i ponder 1e1f
-
-position startpos moves 2g2f 3c3d 7g7f 2b8h+ 7i8h 3a4b B*4e 7a6b 4e3d 4a3b 6g6f 6c6d 8h7g 6b6c 4i5h 4b3c 3d1f 6c5d 5h6g 4c4d 5g5f 4d4e 3i4h 1c1d 5i6h 6a5b 4h5g 1d1e 1f2g
