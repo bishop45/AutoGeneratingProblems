@@ -1,4 +1,3 @@
-D:\MyDocuments\shogi\gikou_win_20160606\gikou.exe
-setoption name USI_Hash value 1024
+D:\MyDocuments\shogi\YaneuraOu-master\exe\YaneuraOu-classic-tce.exe
+setoption name Hash value 1024
 setoption name MultiPV value 4
-setoption name ByoyomiMargin value 10

@@ -1,3 +1,0 @@
-D:\MyDocuments\shogi\YaneuraOu-master\exe\YaneuraOu-classic-tce.exe
-setoption name Hash value 1024
-setoption name MultiPV value 4

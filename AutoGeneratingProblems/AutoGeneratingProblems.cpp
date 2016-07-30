@@ -15,21 +15,21 @@
 using namespace std;
 
 static const string KIFU_DIR = "kifu_sfen"; //sfen棋譜フォルダ
-static const string LIMIT_TIME = "20000"; //検討秒数
-static const int ANSWER_LINES = 5; //取得したい行数
-static const int BEGIN = 30; //検討開始手数
-static const int END = 40; //検討終了手数
+static const string LIMIT_TIME = "50000"; //検討秒数
+static const int ANSWER_LINES = 9; //取得したい行数
+static const int BEGIN = 40; //検討開始手数
+static const int END = 50; //検討終了手数
 
 struct ProcessExecute
 {
 	ProcessExecute() { init(); }
 
 	//プロセスの終了処理
-	virtual ~ProcessExecute() 
+	virtual ~ProcessExecute()
 	{
-		if (pi.hProcess) 
+		if (pi.hProcess)
 		{
-			if (::WaitForSingleObject(pi.hProcess, 1000) != WAIT_OBJECT_0) 
+			if (::WaitForSingleObject(pi.hProcess, 1000) != WAIT_OBJECT_0)
 			{
 				::TerminateProcess(pi.hProcess, 0);
 			}
@@ -51,7 +51,7 @@ struct ProcessExecute
 		si.hStdOutput = child_std_out_write; //標準出力
 		si.dwFlags |= STARTF_USESTDHANDLES; //フラグ
 
-		// Create the child process
+											// Create the child process
 		success = ::CreateProcess(app_path.c_str(), // ApplicationName
 			NULL, // CmdLine
 			NULL, // security attributes
@@ -74,14 +74,14 @@ struct ProcessExecute
 	bool success; //真・偽を格納する
 
 	static const int BUF_SIZE = 4096;
-	
+
 	string read()
-	{	
-	
+	{
+
 		auto result = read_next();
 		if (!result.empty())
 			return result;
-	
+
 		// ReadFileは同期的に使いたいが、しかしデータがないときにブロックされるのは困るので
 		// pipeにデータがあるのかどうかを調べてからReadFile()する。
 
@@ -112,7 +112,7 @@ struct ProcessExecute
 		}
 		return read_next();
 	}
-	
+
 	bool write(string str)
 	{
 		str += "\r\n"; // 改行コードの付与
@@ -139,7 +139,7 @@ protected:
 			cout << "error SetHandleInformation : std out" << endl;
 	}
 
-	
+
 	string read_next()
 	{
 		// read_bufferから改行までを切り出す
@@ -266,7 +266,7 @@ struct EngineState
 			{
 				out.push_back(out_line);
 			}
-			if (out_line.find("bestmove") != string::npos) 
+			if (out_line.find("bestmove") != string::npos)
 			{
 				//cout << l_size << endl;
 				for (int i = ANSWER_LINES; i > 0; i--)
@@ -287,7 +287,7 @@ struct EngineState
 	void set_engine_config(vector<string>& lines) { engine_config = lines; }
 
 	ProcessExecute pe;
-	
+
 protected:
 	// 内部状態
 	State state;
@@ -339,13 +339,13 @@ void load_config()
 	f.close();
 }
 
-int check_capture(string str1, string str2) 
+int check_capture(string str1, string str2)
 {
-	for (size_t c = str1.find_first_of("+"); c != string::npos; c = c = str1.find_first_of("+")) 
+	for (size_t c = str1.find_first_of("+"); c != string::npos; c = c = str1.find_first_of("+"))
 	{
 		str1.erase(c, 1);
 	}
-	for (size_t c = str2.find_first_of("+"); c != string::npos; c = c = str2.find_first_of("+")) 
+	for (size_t c = str2.find_first_of("+"); c != string::npos; c = c = str2.find_first_of("+"))
 	{
 		str2.erase(c, 1);
 	}
@@ -356,11 +356,11 @@ int check_capture(string str1, string str2)
 
 vector<string> load_kifu()
 {
-	
+
 	tr2::sys::path k_dir(KIFU_DIR);
 	// k_dir以下のファイル名を取得する
 	// 再帰的にファイル名を取得する場合は、std::tr2::sys::recursive_directory_iteratorを使う
-	for (tr2::sys::directory_iterator it(k_dir), end; it != end; ++it) 
+	for (tr2::sys::directory_iterator it(k_dir), end; it != end; ++it)
 	{
 		file_list.push_back(it->path());
 	}
@@ -368,11 +368,11 @@ vector<string> load_kifu()
 	/*
 	// 取得したファイル名をすべて表示する
 	for (auto &path : file_list) {
-		std::cout << path << std::endl;
+	std::cout << path << std::endl;
 	}*/
 
 	vector<string> l_kifu;
-	for(auto &path : file_list) {
+	for (auto &path : file_list) {
 		fstream f_kifu;
 		f_kifu.open(path);
 		string temp;
@@ -381,14 +381,14 @@ vector<string> load_kifu()
 		/*
 		while (getline(f_kifu, temp, ' '))
 		{
-			l_kifu.push_back(temp);
+		l_kifu.push_back(temp);
 		}*/
 	}
 	return 	l_kifu;
 	/*
 	for (unsigned i = 0; i < l_kifu.size(); i++)
 	{
-		std::cout << l_kifu[i] << std::endl;
+	std::cout << l_kifu[i] << std::endl;
 	}*/
 
 }
@@ -396,7 +396,7 @@ int main()
 {
 	//設定のロード
 	load_config();
-	
+
 	//棋譜のロード
 	kifu_list = load_kifu();
 	if (kifu_list.empty())
@@ -414,19 +414,19 @@ int main()
 		return 0;
 
 	es.set_engine_config(engine_config_line);
-	for (int  i= 0; i < (int)(kifu_list.size()); i++)
+	for (int i = 0; i < (int)(kifu_list.size()); i++)
 	{
-		for (int j = BEGIN+1; j < END+1;)
+		for (int j = BEGIN + 1; j < END + 1;)
 		{
 			es.on_idle();
 			if (!game_started && es.is_game_started())
 			{
-				cout << (i+1) << "/" << (int)(kifu_list.size()) << " Kifu_file, " << (j-1) << " moves"<< endl;
+				cout << (i + 1) << "/" << (int)(kifu_list.size()) << " Kifu_file, " << (j - 1) << " moves" << endl;
 				vector <string> tmp;
-				boost::algorithm::split(tmp, kifu_list[i], boost::algorithm:: is_space());
+				boost::algorithm::split(tmp, kifu_list[i], boost::algorithm::is_space());
 				//cout << tmp[j - 1] << " " << tmp[j] << endl;
 				if (!check_capture(tmp[j - 1], tmp[j]))
-				{
+				{ 
 					string position = "position";
 					for (int k = 0; k < j-1; k++)
 					{
